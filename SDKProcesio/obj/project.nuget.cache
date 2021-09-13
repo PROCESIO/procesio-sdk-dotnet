@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "J6JSSm4I3ZHiUt+5KcKdlGZIR6+jQ/xOLvrOxyhTLTeRJU+VSCLhO9P7+GI156lnJrR9BRJGz7vmj5jhJ57AjQ==",
+  "dgSpecHash": "ti5llvC0zpZ8fxtttJrI3V+vz+j/phIHaOvIyImGIHhDMARi4E5Vfnfwiy+YUGZ4/zvetThOiwWO+TA9A8wNDA==",
   "success": true,
-  "projectFilePath": "D:\\SDKProcesio\\SDKProcesio\\SDKProcesio.csproj",
+  "projectFilePath": "D:\\SDK_dotnet\\SDKProcesio\\SDKProcesio.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\AnaMaria\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\5.0.0\\microsoft.extensions.configuration.abstractions.5.0.0.nupkg.sha512",
     "C:\\Users\\AnaMaria\\.nuget\\packages\\microsoft.extensions.configuration.binder\\5.0.0\\microsoft.extensions.configuration.binder.5.0.0.nupkg.sha512",

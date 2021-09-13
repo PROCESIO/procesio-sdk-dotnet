@@ -217,11 +217,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\SDKProcesio\\SDKProcesio\\SDKProcesio.csproj",
+      "projectUniqueName": "D:\\SDK_dotnet\\SDKProcesio\\SDKProcesio.csproj",
       "projectName": "SDKProcesio",
-      "projectPath": "D:\\SDKProcesio\\SDKProcesio\\SDKProcesio.csproj",
+      "projectPath": "D:\\SDK_dotnet\\SDKProcesio\\SDKProcesio.csproj",
       "packagesPath": "C:\\Users\\AnaMaria\\.nuget\\packages\\",
-      "outputPath": "D:\\SDKProcesio\\SDKProcesio\\obj\\",
+      "outputPath": "D:\\SDK_dotnet\\SDKProcesio\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
