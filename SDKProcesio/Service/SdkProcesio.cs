@@ -219,8 +219,8 @@ namespace SDKProcesio.Service
                 { "refresh_token", refreshToken }
             };
 
-            Uri baseUri = new(_config.ProcesioURL);
-            Uri uri = new(baseUri, _config.ProcesioAuthURL);
+            Uri baseUri = new(_config.ProcesioAuthURL);
+            Uri uri = new(baseUri, _config.ProcesioAuthMethod);
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
