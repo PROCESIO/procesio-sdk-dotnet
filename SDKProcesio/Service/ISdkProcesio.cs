@@ -3,13 +3,12 @@ using System.Threading.Tasks;
 
 namespace SDKProcesio.Service
 {
-    interface ISdkProcesio
+    public interface ISdkProcesio
     {
-        Task<string> PublishProject(string projectId, string requestBody, string token);
-        Task<string> LaunchFlowInstance(string flowId, string requestBody, string token);
-        Task<string> RunProject(string id, string requestBody, string token);
-        Task<ProcesioTokens> Authenticate(string realm, string grantType, string userName, string passw, string clientId);
-        Task<ProcesioTokens> RefreshToken(string clientId, string refreshToken);
-        Task<ProcesioTokens> GetProcesioTokens();
+        Task<string> PublishProject(string id, object requestBody, string workspace, ProcesioTokens procesioTokens);
+        Task<string> LaunchProjectInstance(string id, object requestBody, string workspace, ProcesioTokens procesioTokens);
+        Task<string> RunProject(string id, object requestBody, string workspace, ProcesioTokens procesioTokens);
+        Task<ProcesioTokens> Authenticate(ProcesioUser procesioUser);
+        Task<ProcesioTokens> RefreshToken(string refreshToken);
     }
 }

@@ -2,9 +2,8 @@
 
 namespace SDKProcesio.Responses
 {
-    interface IUploadResponse
+    public interface IUploadResponse
     {
-        [JsonProperty("id")]
         string FileID { get; set; }
     }
 }

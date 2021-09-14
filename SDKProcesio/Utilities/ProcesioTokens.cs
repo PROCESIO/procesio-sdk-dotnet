@@ -12,5 +12,13 @@ namespace SDKProcesio.Utilities
 
         [JsonProperty("expires_in")]
         public int Expires_in { get; set; }
+        
+        public ProcesioTokens() { }
+        public ProcesioTokens(string accesToken, string refreshToken, int expires_in)
+        {
+            AccessToken = accesToken;
+            RefreshToken = refreshToken;
+            Expires_in = expires_in;
+        }
     }
 }

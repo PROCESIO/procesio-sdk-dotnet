@@ -1,19 +1,16 @@
 ﻿
+using System.Configuration;
+
 namespace SDKProcesio.Config
 {
-	public class ProcesioConfig 
+	public static class ProcesioConfig
 	{
-		public string ProcesioAuthURL { get; set; } 
-		public string ProcesioAuthMethod { get; set; } 
-		public string ProcesioAuthRealm { get; set; } 
-		public string ProcesioAuthGrantType { get; set; } 
-		public string ProcesioAuthUsername { get; set; }
-		public string ProcesioAuthPassword { get; set; }
-		public string ProcesioAuthClientId { get; set; }
-		public string ProcesioURL { get; set; } 
-		public string ProcesioRunMethod { get; set; } 
-		public string ProcesioPublishMethod { get; set; } 
-		public string ProcesioLaunchMethod { get; set; } 
-		public string ProcesioUploadFlowFile { get; set; }
+		public static string ProcesioAuthURL { get; set; } = ConfigurationManager.AppSettings.Get("ProcesioAuthURL");
+		public static string ProcesioAuthMethod { get; set; } = ConfigurationManager.AppSettings.Get("ProcesioAuthMethod");
+		public static string ProcesioURL { get; set; } = ConfigurationManager.AppSettings.Get("ProcesioURL");
+		public static string ProcesioRunMethod { get; set; } = ConfigurationManager.AppSettings.Get("ProcesioRunMethod");
+		public static string ProcesioPublishMethod { get; set; } = ConfigurationManager.AppSettings.Get("ProcesioPublishMethod");
+		public static string ProcesioLaunchMethod { get; set; } = ConfigurationManager.AppSettings.Get("ProcesioLaunchMethod");
+		public static string ProcesioUploadFlowFile { get; set; } = ConfigurationManager.AppSettings.Get("ProcesioUploadFlowFile");
 	}
 }
