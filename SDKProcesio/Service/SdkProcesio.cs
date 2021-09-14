@@ -163,7 +163,7 @@ namespace SDKProcesio.Service
             try
             {
                 var response = await httpResponse.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<IUploadResponse>(response).FileID;
+                return JsonConvert.DeserializeObject<UploadResponse>(response).FileID;
             }
             catch
             {
