@@ -15,7 +15,7 @@
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>
 			$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb;.json
 		</AllowedOutputExtensionsInPackageBuildOutputFolder>
-		<Version>1.0.0</Version>
+		<Version>0.0.1</Version>
 	</PropertyGroup>
 
   <ItemGroup>
