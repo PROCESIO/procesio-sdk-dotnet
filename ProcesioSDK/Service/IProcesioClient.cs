@@ -1,4 +1,4 @@
-﻿using ProcesioSDK.Dto;
+﻿using ProcesioSDK.Dto.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

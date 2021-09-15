@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProcesioSDK.Config;
-using ProcesioSDK.Responses;
 using ProcesioSDK.Dto;
 using System;
 using System.Collections.Generic;
@@ -13,6 +12,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using ProcesioSDK.Utilities;
+using ProcesioSDK.Dto.Data;
 
 namespace ProcesioSDK
 {
@@ -242,7 +242,6 @@ namespace ProcesioSDK
             {
                 Console.WriteLine("HTTP Response was invalid or could not be deserialised.");
             }
-
             return null;
         }
 

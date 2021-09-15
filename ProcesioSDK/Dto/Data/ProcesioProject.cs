@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProcesioSDK.Dto
+namespace ProcesioSDK.Dto.Data
 {
     public class ProcesioProject
     {

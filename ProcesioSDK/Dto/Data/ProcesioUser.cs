@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace ProcesioSDK.Dto
+namespace ProcesioSDK.Dto.Data
 {
     public class ProcesioUser
     {

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
+using ProcesioSDK.Contracts;
 
-namespace ProcesioSDK.Responses
+namespace ProcesioSDK.Dto
 {
     public class UploadResponse : IUploadResponse
     {

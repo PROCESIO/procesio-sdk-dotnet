@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace ProcesioSDK.Dto
+namespace ProcesioSDK.Dto.Data
 {
     public class ProcesioFileContent
     {

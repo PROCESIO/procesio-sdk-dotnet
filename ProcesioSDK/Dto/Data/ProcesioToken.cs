@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace ProcesioSDK.Dto
+namespace ProcesioSDK.Dto.Data
 {
     public class ProcesioToken
     {
