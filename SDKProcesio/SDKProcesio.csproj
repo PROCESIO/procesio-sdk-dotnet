@@ -16,6 +16,9 @@
 			$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb;.json
 		</AllowedOutputExtensionsInPackageBuildOutputFolder>
 		<Version>1.0.0</Version>
+		<Authors>Ringhel</Authors>
+		<Product>SDKProcesio</Product>
+		<RepositoryUrl>https://github.com/PROCESIO/procesio-sdk-dotnet.git</RepositoryUrl>
 	</PropertyGroup>
 
   <ItemGroup>
