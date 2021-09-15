@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SDKProcesio.Responses
+namespace ProcesioSDK.Responses
 {
     public class LaunchResponse : ILaunchResponse
     {

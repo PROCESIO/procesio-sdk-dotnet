@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SDKProcesio.Utilities
+namespace ProcesioSDK.Utilities
 {
     public class ProcesioUser
     {

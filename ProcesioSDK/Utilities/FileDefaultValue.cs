@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SDKProcesio.Utilities
+namespace ProcesioSDK.Utilities
 {
     public class FileDefaultValue
     {

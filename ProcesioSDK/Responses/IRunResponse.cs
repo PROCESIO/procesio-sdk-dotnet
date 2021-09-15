@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace SDKProcesio.Responses
+namespace ProcesioSDK.Responses
 {
-    interface ILaunchResponse
+    interface IRunResponse
     {
         string InstanceID { get; set; }
     }

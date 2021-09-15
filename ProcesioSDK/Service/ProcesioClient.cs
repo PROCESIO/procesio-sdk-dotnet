@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SDKProcesio.Config;
-using SDKProcesio.Responses;
-using SDKProcesio.Utilities;
+using ProcesioSDK.Config;
+using ProcesioSDK.Responses;
+using ProcesioSDK.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,24 +13,62 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SDKProcesio.Service
+namespace ProcesioSDK
 {
-    public class SdkProcesio : ISdkProcesio
+    public class ProcesioClient : IProcesioClient
     {
-        private readonly HttpClient client;
+        private readonly HttpClient _client;
+        private readonly ProcesioConfig _procesioConfig;
 
         public Guid FlowId { get; set; }
         public Dictionary<string, Guid> FileMap { get; set; }
         public Dictionary<Guid,string> VariableNameMap { get; set; }
 
-        public SdkProcesio()
+        /// <summary>
+        /// Creates an instance of the Procesio SDK that can be used to access the main features provided by the Procesio App
+        /// </summary>
+        /// <param name="config">must have a ProcesioConfig section within appsettings file.</param>
+        /// <exception cref="ArgumentNullException">This exception is thrown if the Procesio Configurationb is not valid</exception>
+        public ProcesioClient(IConfiguration config)
         {
-            client = new HttpClient();
+            _client = new HttpClient();
+            _procesioConfig = config.GetValue<ProcesioConfig>("ProcesioConfig");
+            ValidateProcesioConfiguration(_procesioConfig);
+        }
+
+        /// <summary>
+        /// Creates an instance of the Procesio SDK that can be used to access the main features provided by the Procesio App
+        /// </summary>
+        /// <param name="procesioConfig">The Procesio Configuration required to access the Hosted Procesio server.</param>
+        /// <exception cref="ArgumentNullException">This exception is thrown if the Procesio Configurationb is not valid</exception>
+        public ProcesioClient(ProcesioConfig procesioConfig)
+        {
+            _procesioConfig = procesioConfig;
+            ValidateProcesioConfiguration(_procesioConfig);
+        }
+
+        private void ValidateProcesioConfiguration(ProcesioConfig config)
+        {
+            if(string.IsNullOrEmpty(config.ServerName))
+            {
+                throw new ArgumentNullException("Server Name");
+            }
+            if(config.MainPort == 0)
+            {
+                throw new ArgumentNullException("Main Port");
+            }
+            if(config.AuthenticationPort == 0)
+            {
+                throw new ArgumentNullException("Authentication Port");
+            }
         }
 
         public async Task<Flows> PublishProject(string id, object requestBody, string workspace, ProcesioTokens procesioTokens)
         {
-            if (id == null || requestBody == null || procesioTokens.AccessToken == null || procesioTokens.RefreshToken == null)
+            if (string.IsNullOrEmpty(id) 
+                || requestBody == null 
+                || string.IsNullOrEmpty(procesioTokens.AccessToken) 
+                || string.IsNullOrEmpty(procesioTokens.RefreshToken))
             {
                 return null;
             }
@@ -39,16 +78,15 @@ namespace SDKProcesio.Service
                 await RefreshToken(procesioTokens.RefreshToken);
             }
 
-            Uri baseUri = new Uri(Constants.ProcesioURL);
-            Uri uri = new Uri(baseUri, string.Format(Constants.ProcesioPublishMethod, id));
+            Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.ProcesioPublishMethod, id));
 
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("workspace",workspace);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", procesioTokens.AccessToken);
+            _client.DefaultRequestHeaders.Clear();
+            _client.DefaultRequestHeaders.Add("Accept", "application/json");
+            _client.DefaultRequestHeaders.Add("workspace",workspace);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", procesioTokens.AccessToken);
 
             var httpContent = new StringContent(requestBody.ToString(), Encoding.UTF8, "application/json");
-            var httpResponse = await client.PostAsync(uri, httpContent);
+            var httpResponse = await _client.PostAsync(uri, httpContent);
 
             try
             {
@@ -80,16 +118,15 @@ namespace SDKProcesio.Service
                 await RefreshToken(procesioTokens.RefreshToken);
             }
 
-            Uri baseUri = new Uri(Constants.ProcesioURL);
-            Uri uri = new Uri(baseUri, string.Format(Constants.ProcesioLaunchMethod, id));
+            Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.ProcesioLaunchMethod, id));
 
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("workspace", workspace);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", procesioTokens.AccessToken);
+            _client.DefaultRequestHeaders.Clear();
+            _client.DefaultRequestHeaders.Add("Accept", "application/json");
+            _client.DefaultRequestHeaders.Add("workspace", workspace);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", procesioTokens.AccessToken);
 
             var httpContent = new StringContent(requestBody.ToString(), Encoding.UTF8, "application/json");
-            var httpResponse = await client.PostAsync(uri, httpContent);
+            var httpResponse = await _client.PostAsync(uri, httpContent);
 
             try
             {
@@ -116,16 +153,15 @@ namespace SDKProcesio.Service
                 await RefreshToken(procesioTokens.RefreshToken);
             }
 
-            Uri baseUri = new Uri(Constants.ProcesioURL);
-            Uri uri = new Uri(baseUri, string.Format(Constants.ProcesioRunMethod, id));
+            Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.ProcesioRunMethod, id));
 
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("workspace", workspace);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", procesioTokens.AccessToken);
+            _client.DefaultRequestHeaders.Clear();
+            _client.DefaultRequestHeaders.Add("Accept", "application/json");
+            _client.DefaultRequestHeaders.Add("workspace", workspace);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", procesioTokens.AccessToken);
 
             var httpContent = new StringContent(requestBody.ToString(), Encoding.UTF8, "application/json");
-            var httpResponse = await client.PostAsync(uri, httpContent);
+            var httpResponse = await _client.PostAsync(uri, httpContent);
 
             try
             {
@@ -154,16 +190,15 @@ namespace SDKProcesio.Service
                 await RefreshToken(procesioTokens.RefreshToken);
             }
 
-            Uri baseUri = new Uri(Constants.ProcesioURL);
-            Uri uri = new Uri(baseUri, Constants.ProcesioUploadFlowFile);
+            Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), Constants.ProcesioUploadFlowFile);
 
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("fileId", uploadFileParam.FileId.ToString());
-            client.DefaultRequestHeaders.Add("flowInstanceId", uploadFileParam.FlowInstanceID.ToString());
-            client.DefaultRequestHeaders.Add("variableName", uploadFileParam.VariableName);
-            client.DefaultRequestHeaders.Add("workspace", workspace);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", procesioTokens.AccessToken);
+            _client.DefaultRequestHeaders.Clear();
+            _client.DefaultRequestHeaders.Add("Accept", "application/json");
+            _client.DefaultRequestHeaders.Add("fileId", uploadFileParam.FileId.ToString());
+            _client.DefaultRequestHeaders.Add("flowInstanceId", uploadFileParam.FlowInstanceID.ToString());
+            _client.DefaultRequestHeaders.Add("variableName", uploadFileParam.VariableName);
+            _client.DefaultRequestHeaders.Add("workspace", workspace);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", procesioTokens.AccessToken);
 
             MultipartFormDataContent form = new MultipartFormDataContent();
             using (var memoryStream = new MemoryStream())
@@ -175,7 +210,7 @@ namespace SDKProcesio.Service
             form.Add(new StringContent(uploadFileParam.FileName), nameof(uploadFileParam.FileName));
             form.Add(new StringContent(uploadFileParam.Length), nameof(uploadFileParam.Length));
 
-            var httpResponse = await client.PostAsync(uri, form);
+            var httpResponse = await _client.PostAsync(uri, form);
             
             try
             {
@@ -247,13 +282,12 @@ namespace SDKProcesio.Service
                 { "client_id", procesioUser.ClientId }
             };
 
-            Uri baseUri = new Uri(Constants.ProcesioAuthURL);
-            Uri uri = new Uri(baseUri, Constants.ProcesioAuthMethod);
+            Uri uri = new Uri(ProcesioPath.AuthenticationUrl(_procesioConfig), Constants.ProcesioAuthMethod);
 
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            _client.DefaultRequestHeaders.Clear();
+            _client.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            var httpResponse = await client.PostAsync(uri, new FormUrlEncodedContent(queryString));
+            var httpResponse = await _client.PostAsync(uri, new FormUrlEncodedContent(queryString));
 
             try
             {
@@ -281,13 +315,12 @@ namespace SDKProcesio.Service
                 { "refresh_token", refreshToken }
             };
 
-            Uri baseUri = new Uri(Constants.ProcesioAuthURL);
-            Uri uri = new Uri(baseUri, Constants.ProcesioAuthMethod);
+            Uri uri = new Uri(ProcesioPath.AuthenticationUrl(_procesioConfig), Constants.ProcesioAuthMethod);
 
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            _client.DefaultRequestHeaders.Clear();
+            _client.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            var httpResponse = await client.PostAsync(uri, new FormUrlEncodedContent(queryString));
+            var httpResponse = await _client.PostAsync(uri, new FormUrlEncodedContent(queryString));
 
             try
             {

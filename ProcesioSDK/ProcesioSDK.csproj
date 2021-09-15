@@ -17,8 +17,10 @@
 		</AllowedOutputExtensionsInPackageBuildOutputFolder>
 		<Version>1.0.0</Version>
 		<Authors>Ringhel</Authors>
-		<Product>SDKProcesio</Product>
+		<Product>Procesio</Product>
 		<RepositoryUrl>https://github.com/PROCESIO/procesio-sdk-dotnet.git</RepositoryUrl>
+		<AssemblyName>ProcesioSDK</AssemblyName>
+		<RootNamespace>ProcesioSDK</RootNamespace>
 	</PropertyGroup>
 
   <ItemGroup>

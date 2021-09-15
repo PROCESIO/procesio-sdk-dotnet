@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace SDKProcesio.Responses
+namespace ProcesioSDK.Responses
 {
       public class Variable
      {
