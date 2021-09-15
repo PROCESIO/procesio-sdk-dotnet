@@ -1,18 +1,24 @@
-﻿using ProcesioSDK.Responses;
-using ProcesioSDK.Utilities;
+﻿using ProcesioSDK.Dto;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ProcesioSDK
 {
     public interface IProcesioClient
     {
-        Task<ProcesioTokens> Authenticate(ProcesioUser procesioUser);
-        Task<ProcesioTokens> RefreshToken(string refreshToken);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="procesioUser"></param>
+        /// <returns></returns>
+        /// <exception cref="HttpRequestException">This exception is thrown if the Procesio Authentication request failed</exception>
+        Task<ProcesioToken> Authenticate(ProcesioUser procesioUser);
+        Task<bool> RefreshToken(ProcesioToken procesioToken);
 
-        Task<Flows> PublishProject(string id, object requestBody, string workspace, ProcesioTokens procesioTokens);
-        Task<string> LaunchProjectInstance(string id, object requestBody, string workspace, ProcesioTokens procesioTokens);
-        Task<string> RunProject(string id, object requestBody, string workspace, ProcesioTokens procesioTokens);
-        Task<string> UploadFileFlow(UploadFileParam uploadFileParam, ProcesioTokens procesioTokens, string workspace);
-        void GetFileIds(Flows flow);
+        Task<ProcesioProject> PublishProject(string id, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null);
+        Task<string> LaunchProjectInstance(string id, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace);
+        Task<string> RunProject(string id, Dictionary<string, object> inputValues, string workspace, ProcesioToken procesioToken);
+        Task<string> UploadInputFileToProject(string id, ProcesioFileContent fileContent, ProcesioToken procesioToken, string workspace);
+        void GetFileIds(ProcesioProject flow);
     }
 }
