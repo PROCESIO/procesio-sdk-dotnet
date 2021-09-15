@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SDKProcesio.Config;
 using SDKProcesio.Responses;
@@ -41,8 +39,8 @@ namespace SDKProcesio.Service
                 await RefreshToken(procesioTokens.RefreshToken);
             }
 
-            Uri baseUri = new(Constants.ProcesioURL);
-            Uri uri = new(baseUri, string.Format(Constants.ProcesioPublishMethod, id));
+            Uri baseUri = new Uri(Constants.ProcesioURL);
+            Uri uri = new Uri(baseUri, string.Format(Constants.ProcesioPublishMethod, id));
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -82,8 +80,8 @@ namespace SDKProcesio.Service
                 await RefreshToken(procesioTokens.RefreshToken);
             }
 
-            Uri baseUri = new(Constants.ProcesioURL);
-            Uri uri = new(baseUri, string.Format(Constants.ProcesioLaunchMethod, id));
+            Uri baseUri = new Uri(Constants.ProcesioURL);
+            Uri uri = new Uri(baseUri, string.Format(Constants.ProcesioLaunchMethod, id));
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -118,8 +116,8 @@ namespace SDKProcesio.Service
                 await RefreshToken(procesioTokens.RefreshToken);
             }
 
-            Uri baseUri = new(Constants.ProcesioURL);
-            Uri uri = new(baseUri, string.Format(Constants.ProcesioRunMethod, id));
+            Uri baseUri = new Uri(Constants.ProcesioURL);
+            Uri uri = new Uri(baseUri, string.Format(Constants.ProcesioRunMethod, id));
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -156,8 +154,8 @@ namespace SDKProcesio.Service
                 await RefreshToken(procesioTokens.RefreshToken);
             }
 
-            Uri baseUri = new(Constants.ProcesioURL);
-            Uri uri = new(baseUri, Constants.ProcesioUploadFlowFile);
+            Uri baseUri = new Uri(Constants.ProcesioURL);
+            Uri uri = new Uri(baseUri, Constants.ProcesioUploadFlowFile);
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -209,7 +207,7 @@ namespace SDKProcesio.Service
                         foreach (JObject fileModel in fileModels)
                         {
                             string fileName = fileModel.GetValue(Constants.ProcesioFileDataPropertyName)?.ToString();
-                            Guid fileId = new(fileModel.GetValue(Constants.ProcesioFileDataPropertyId)?.ToString());
+                            Guid fileId = new Guid(fileModel.GetValue(Constants.ProcesioFileDataPropertyId)?.ToString());
                             dic.Add(fileName, fileId);
                             dic2.Add(fileId, flowFileTypeVar.Name);
                         }
@@ -218,7 +216,7 @@ namespace SDKProcesio.Service
                     {
                         var fileModel = JObject.Parse(flowFileTypeVar.DefaultValue.ToString());
                         string fileName = fileModel.GetValue(Constants.ProcesioFileDataPropertyName)?.ToString();
-                        Guid fileId = new(fileModel.GetValue(Constants.ProcesioFileDataPropertyId)?.ToString());
+                        Guid fileId = new Guid(fileModel.GetValue(Constants.ProcesioFileDataPropertyId)?.ToString());
                         dic.Add(fileName, fileId);
                         dic2.Add(fileId, flowFileTypeVar.Name);
                     }
@@ -249,8 +247,8 @@ namespace SDKProcesio.Service
                 { "client_id", procesioUser.ClientId }
             };
 
-            Uri baseUri = new(Constants.ProcesioAuthURL);
-            Uri uri = new(baseUri, Constants.ProcesioAuthMethod);
+            Uri baseUri = new Uri(Constants.ProcesioAuthURL);
+            Uri uri = new Uri(baseUri, Constants.ProcesioAuthMethod);
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -283,8 +281,8 @@ namespace SDKProcesio.Service
                 { "refresh_token", refreshToken }
             };
 
-            Uri baseUri = new(Constants.ProcesioAuthURL);
-            Uri uri = new(baseUri, Constants.ProcesioAuthMethod);
+            Uri baseUri = new Uri(Constants.ProcesioAuthURL);
+            Uri uri = new Uri(baseUri, Constants.ProcesioAuthMethod);
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
