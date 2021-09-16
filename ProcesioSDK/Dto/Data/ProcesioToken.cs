@@ -2,6 +2,9 @@
 
 namespace ProcesioSDK.Dto.Data
 {
+    /// <summary>
+    /// The class used for the response of Authentication method
+    /// </summary>
     public class ProcesioToken
     {
         [JsonProperty("access_token")]

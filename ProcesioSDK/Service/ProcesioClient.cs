@@ -16,6 +16,10 @@ using ProcesioSDK.Dto.Data;
 
 namespace ProcesioSDK
 {
+    /// <summary>
+    /// Implements the methods that authenticate user by credentials; refresh user token valability; 
+    /// publish the project to new runtime instance and launch flow instance; run project; upload file used for flows
+    /// </summary>
     public class ProcesioClient : IProcesioClient
     {
         private readonly HttpClient _client;
@@ -112,6 +116,7 @@ namespace ProcesioSDK
             }
         }
 
+        /// <inheritdoc />
         public async Task<ProcesioProject> PublishProject(string id, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null)
         {
             if (string.IsNullOrEmpty(id))
@@ -158,8 +163,7 @@ namespace ProcesioSDK
             return null;
         }
 
-        
-
+        /// <inheritdoc />
         public async Task<string> LaunchProjectInstance(string id, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace)
         {
             if (string.IsNullOrEmpty(id))
@@ -203,6 +207,7 @@ namespace ProcesioSDK
             return null;
         }
 
+        /// <inheritdoc />
         public async Task<string> RunProject(string id, Dictionary<string, object> inputValues, string workspace, ProcesioToken procesioToken)
         {
             if (string.IsNullOrEmpty(id))
@@ -245,6 +250,7 @@ namespace ProcesioSDK
             return null;
         }
 
+        /// <inheritdoc />
         public async Task<string> UploadInputFileToProject(string id, ProcesioFileContent fileContent, ProcesioToken procesioToken, string workspace)
         {
             if (string.IsNullOrEmpty(id))
@@ -302,6 +308,7 @@ namespace ProcesioSDK
             return null;
         }
 
+        /// <inheritdoc />
         public void GetFileIds(ProcesioProject project)
         {
             try

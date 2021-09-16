@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ProcesioSDK.Dto.Data
 {
+    /// <summary>
+    /// The class used for the parameters that are given to the Authenticate method
+    /// </summary>
     public class ProcesioUser
     {
         [JsonProperty("username")]
