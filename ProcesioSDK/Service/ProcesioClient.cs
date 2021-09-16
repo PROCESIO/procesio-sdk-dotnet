@@ -17,8 +17,7 @@ using System.Threading.Tasks;
 namespace ProcesioSDK
 {
     /// <summary>
-    /// Implements the methods that authenticate user by credentials; refresh user token valability; 
-    /// publish the process to new runtime instance and launch flow instance; run process; upload file used for flows
+    /// Procesio Client used to communicate with the Procesio web services
     /// </summary>
     public class ProcesioClient : IProcesioClient
     {
@@ -290,7 +289,6 @@ namespace ProcesioSDK
 
             return result;
         }
-
 
         private void ValidateProcesioConfiguration(ProcesioConfig config)
         {
