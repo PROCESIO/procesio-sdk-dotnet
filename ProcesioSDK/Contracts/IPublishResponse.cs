@@ -6,6 +6,6 @@ namespace ProcesioSDK.Contracts
     public interface IPublishResponse
     {
         [JsonProperty("flows")]
-        ProcesioProject Project { get; set; }
+        ProcessInstance Process { get; set; }
     }
 }

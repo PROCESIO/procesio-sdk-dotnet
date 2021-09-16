@@ -5,12 +5,12 @@ using ProcesioSDK.Dto.Data;
 namespace ProcesioSDK.Dto
 {
     /// <summary>
-    /// The class used for the response of PublishProject method, that returns the variables, flow id, description,
-    /// title, first name, last name, workspace name of the project
+    /// The class used for the response of Publish Process method, that returns the variables, flow id, description,
+    /// title, first name, last name, workspace name of the process
     /// </summary>
     public class PublishResponse : IPublishResponse
     {
         [JsonProperty("flows")]
-        public ProcesioProject Project { get; set; }
+        public ProcessInstance Process { get; set; }
     }
 }

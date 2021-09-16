@@ -4,11 +4,8 @@ using System.Collections.Generic;
 
 namespace ProcesioSDK.Dto.Data
 {
-    public class ProcesioProject
+    public class ProcessInstance
     {
-        [JsonProperty("variables")]
-        public List<ProjectVariable> Variables { get; set; }
-
         [JsonProperty("id")]
         public Guid Id { get; set; }
 
@@ -29,5 +26,8 @@ namespace ProcesioSDK.Dto.Data
 
         [JsonProperty("workspaceName")]
         public string WorkspaceName { get; set; }
+
+        [JsonProperty("variables")]
+        public List<ProcessVariable> Variables { get; set; }
     }
 }

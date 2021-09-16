@@ -7,12 +7,12 @@ namespace ProcesioSDK.Utilities
     {
         public static Uri WebApiUrl(ProcesioConfig config)
         {
-            return new Uri(string.Format(Constants.ProcesioURL, config.ServerName, config.MainPort));
+            return new Uri(string.Format(Constants.PROCESIO_URL, config.ServerUri));
         }
 
         public static Uri AuthenticationUrl(ProcesioConfig config)
         {
-            return new Uri(string.Format(Constants.ProcesioURL, config.ServerName, config.AuthenticationPort));
+            return new Uri(string.Format(Constants.PROCESIO_URL, config.AuthenticationUri));
         }
     }
 }

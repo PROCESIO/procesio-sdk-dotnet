@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ProcesioSDK.Config;
 using System.Collections.Generic;
 
 namespace ProcesioSDK.Dto.Data
@@ -9,39 +10,31 @@ namespace ProcesioSDK.Dto.Data
     public class ProcesioUser
     {
         [JsonProperty("username")]
-        public string UserName{get;set; }
+        public string UserName { get; protected set; }
 
         [JsonProperty("password")]
-        public string Password { get; set; }
-
-        [JsonProperty("realm")]
-        public string Realm { get; set; }
-
-        [JsonProperty("client_id")]
-        public string ClientId { get; set; }
+        public string Password { get; protected set; }
 
         [JsonProperty("grant_type")]
-        public string GrantType { get; set; }
+        public string GrantType { get; protected set; }
 
         public ProcesioUser() { }
-        public ProcesioUser(string userName, string password, string realm, string clientId, string grantType = "password")
+        public ProcesioUser(string userName, string password, string grantType = "password")
         {
             UserName = userName;
             Password = password;
-            Realm = realm;
-            ClientId = clientId;
             GrantType = grantType;
         }
 
-        internal Dictionary<string, string> GetAuthenticationInformation()
+        internal Dictionary<string, string> GetAuthenticationInformation(ProcesioConfig config)
         {
             var queryString = new Dictionary<string, string>
             {
-                { "realm", Realm },
-                { "grant_type", GrantType },
+                { "realm", config.AuthenticationRealm },
+                { "client_id", config.AuthenticationClientId },
                 { "username", UserName },
                 { "password", Password },
-                { "client_id", ClientId }
+                { "grant_type", GrantType }
             };
 
             return queryString;

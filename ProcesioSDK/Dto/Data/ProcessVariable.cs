@@ -2,7 +2,7 @@
 
 namespace ProcesioSDK.Dto.Data
 {
-    public class ProjectVariable
+    public class ProcessVariable
     {
         [JsonProperty("dataType")]
         public string DataType { get; set; }
