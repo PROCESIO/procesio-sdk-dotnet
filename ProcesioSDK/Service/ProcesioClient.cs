@@ -207,6 +207,7 @@ namespace ProcesioSDK
             return ConvertToLaunchResult(response);
         }
 
+        /// <inheritdoc />
         public async Task<Response<ProcessStatusResponse>> GetProcessStatus(string processInstanceId, ProcesioToken procesioToken, string workspace = null)
         {
             throw new NotImplementedException();
