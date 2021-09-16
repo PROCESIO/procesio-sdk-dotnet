@@ -53,6 +53,15 @@ namespace ProcesioSDK
         Task<Response<LaunchResponse>> RunProcess(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null);
 
         /// <summary>
+        /// Get the process status after or during execution
+        /// </summary>
+        /// <param name="processInstanceId"></param>
+        /// <param name="procesioToken"></param>
+        /// <param name="workspace"></param>
+        /// <returns>The process status response</returns>
+        Task<Response<ProcessStatusResponse>> GetProcessStatus(string processInstanceId, ProcesioToken procesioToken, string workspace = null);
+
+        /// <summary>
         /// Upload each input file used for process instance if the process requires it
         /// </summary>
         /// <param name="processInstanceId">Flow id, returned by publish process method</param>

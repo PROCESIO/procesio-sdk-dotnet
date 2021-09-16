@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ProcesioSDK.Config;
 using ProcesioSDK.Dto;
 using ProcesioSDK.Dto.Data;
@@ -206,6 +205,11 @@ namespace ProcesioSDK
             var httpResponse = await _client.PostAsync(uri, httpContent);
             var response = await httpResponse.Content.ReadAsStringAsync();
             return ConvertToLaunchResult(response);
+        }
+
+        public async Task<Response<ProcessStatusResponse>> GetProcessStatus(string processInstanceId, ProcesioToken procesioToken, string workspace = null)
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
