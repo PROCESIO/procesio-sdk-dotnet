@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ProcesioSDK.Dto
 {
@@ -9,7 +8,17 @@ namespace ProcesioSDK.Dto
     public class ProcessStatusResponse
     {
         /// <summary>
+        /// The process instance id
+        /// </summary>
+        public string InstanceId { get; set; }
+
+        /// <summary>
         /// Process state
+        /// </summary>
+        public int State { get; set; }
+
+        /// <summary>
+        /// Process state description
         /// </summary>
         public string Status { get; set; }
 

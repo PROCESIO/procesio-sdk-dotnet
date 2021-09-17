@@ -5,6 +5,6 @@ namespace ProcesioSDK.Contracts
     public interface ILaunchResponse
     {
         [JsonProperty("instanceId")]
-        string InstanceID { get; set; }
+        string InstanceId { get; set; }
     }
 }

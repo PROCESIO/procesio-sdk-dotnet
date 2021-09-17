@@ -29,7 +29,7 @@ namespace ProcesioSDK
         /// <param name="processId">The process id</param>
         /// <param name="inputValues">The name of the variables used for flow and their values</param>
         /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
-        /// <param name="workspace">The workspace name</param>
+        /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
         /// <returns>The generated process instance or error response</returns>
         Task<Response<ProcessInstance>> PublishProcess(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null);
 
@@ -38,7 +38,7 @@ namespace ProcesioSDK
         /// </summary>
         /// <param name="processInstanceId">The flow id</param>
         /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
-        /// <param name="workspace">The workspace name</param>
+        /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
         /// <returns>The launch process response or error response</returns>
         Task<Response<LaunchResponse>> LaunchProcessInstance(string processInstanceId, ProcesioToken procesioToken, string workspace = null);
 
@@ -48,26 +48,37 @@ namespace ProcesioSDK
         /// <param name="processId">The process id</param>
         /// <param name="inputValues">The name of the variables used for flow and their values</param>
         /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification method</param>
-        /// <param name="workspace">The workspace name</param>
+        /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
         /// <returns>The launch process response or error response</returns>
         Task<Response<LaunchResponse>> RunProcess(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null);
 
         /// <summary>
+        /// Run process and wait for the process status. If timeout expires, then the process instance id will be saved.
+        /// </summary>
+        /// <param name="processId">The process id to execute</param>
+        /// <param name="inputValues">The input values used by the process</param>
+        /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
+        /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+        /// <param name="timeOut">number of seconds to wait for the process or return the instance id</param>
+        /// <returns></returns>
+        Task<Response<ProcessStatusResponse>> RunProcessSync(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null, int timeOut = 60);
+
+        /// <summary>
         /// Get the process status after or during execution
         /// </summary>
-        /// <param name="processInstanceId"></param>
-        /// <param name="procesioToken"></param>
-        /// <param name="workspace"></param>
+        /// <param name="processInstanceId">Process instance id, returned by publish process method</param>
+        /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
+        /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
         /// <returns>The process status response</returns>
         Task<Response<ProcessStatusResponse>> GetProcessStatus(string processInstanceId, ProcesioToken procesioToken, string workspace = null);
 
         /// <summary>
         /// Upload each input file used for process instance if the process requires it
         /// </summary>
-        /// <param name="processInstanceId">Flow id, returned by publish process method</param>
+        /// <param name="processInstanceId">Process instance id, returned by publish process method</param>
         /// <param name="fileContent">The file details, as file path, variable name, lenght</param>
         /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
-        /// <param name="workspace">The workspace name</param>
+        /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
         /// <returns>File id</returns>
         Task<Response<UploadResponse>> UploadInputFileToProcessInstance(string processInstanceId, ProcesioFileContent fileContent, ProcesioToken procesioToken, string workspace = null);
 

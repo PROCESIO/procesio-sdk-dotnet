@@ -118,21 +118,11 @@ namespace ProcesioSDK
             {
                 throw new Exception("Empty process id.");
             }
-            else if (procesioToken == null
-                || string.IsNullOrEmpty(procesioToken.AccessToken)
-                || string.IsNullOrEmpty(procesioToken.RefreshToken))
-            {
-                throw new Exception("Invalid authentication token!");
-            }
+            await ValidateAuthentication(procesioToken);
 
             if (inputValues == null)
             {
                 inputValues = new Dictionary<string, object>();
-            }
-
-            if (procesioToken.Expires_in <= 0)
-            {
-                await RefreshToken(procesioToken);
             }
 
             Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.PROCESIO_PUBLISH_METHOD, processId));
@@ -152,17 +142,7 @@ namespace ProcesioSDK
             {
                 throw new Exception("Empty process instance id.");
             }
-            else if (procesioToken == null
-                || string.IsNullOrEmpty(procesioToken.AccessToken)
-                || string.IsNullOrEmpty(procesioToken.RefreshToken))
-            {
-                throw new Exception("Invalid authentication token!");
-            }
-
-            if (procesioToken.Expires_in <= 0)
-            {
-                await RefreshToken(procesioToken);
-            }
+            await ValidateAuthentication(procesioToken);
 
             Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.PROCESIO_LAUNCH_METHOD, processInstanceId));
             InitBasicClientHeaders(procesioToken, workspace);
@@ -174,27 +154,17 @@ namespace ProcesioSDK
         }
 
         /// <inheritdoc />
-        public async Task<Response<LaunchResponse>> RunProcess(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null)
+        public async Task<Response<LaunchResponse>> RunProcess(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null, List<FileContent> inputFiles = null)
         {
             if (string.IsNullOrEmpty(processId))
             {
                 throw new Exception("Empty process instance id.");
             }
-            else if (procesioToken == null
-                || string.IsNullOrEmpty(procesioToken.AccessToken)
-                || string.IsNullOrEmpty(procesioToken.RefreshToken))
-            {
-                throw new Exception("Invalid authentication token!");
-            }
+            await ValidateAuthentication(procesioToken);
 
             if (inputValues == null)
             {
                 inputValues = new Dictionary<string, object>();
-            }
-
-            if (procesioToken.Expires_in <= 0)
-            {
-                await RefreshToken(procesioToken);
             }
 
             Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.PROCESIO_RUN_METHOD, processId));
@@ -208,9 +178,53 @@ namespace ProcesioSDK
         }
 
         /// <inheritdoc />
+        public async Task<Response<ProcessStatusResponse>> RunProcessSync(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null, int timeOut = 60)
+        {
+            if (string.IsNullOrEmpty(processId))
+            {
+                throw new Exception("Empty process instance id.");
+            }
+            await ValidateAuthentication(procesioToken);
+
+            if (inputValues == null)
+            {
+                inputValues = new Dictionary<string, object>();
+            }
+            var queryParams = new Dictionary<string, string>()
+            {
+                { Constants.RUN_SYNC, true.ToString() },
+                { Constants.SECONDS_TIMEOUT, timeOut.ToString() }
+            };
+            var uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.PROCESIO_RUN_METHOD, processId));
+            uri = ProcesioPath.SetUriQueryParameters(uri, queryParams);
+
+            InitBasicClientHeaders(procesioToken, workspace);
+            _client.DefaultRequestHeaders.Add(Constants.RUN_SYNC, true.ToString());
+
+
+
+            var serializedInputValues = JsonConvert.SerializeObject(inputValues);
+            var httpContent = new StringContent(serializedInputValues, Encoding.UTF8, "application/json");
+            var httpResponse = await _client.PostAsync(uri, httpContent);
+            var response = await httpResponse.Content.ReadAsStringAsync();
+            return ConvertToRunProcessResponse(response);
+        }
+
+        /// <inheritdoc />
         public async Task<Response<ProcessStatusResponse>> GetProcessStatus(string processInstanceId, ProcesioToken procesioToken, string workspace = null)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(processInstanceId))
+            {
+                throw new Exception("Empty process instance id.");
+            }
+            await ValidateAuthentication(procesioToken);
+
+            Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.PROCESIO_FLOW_STATE, processInstanceId));
+            InitBasicClientHeaders(procesioToken, workspace);
+
+            var httpResponse = await _client.GetAsync(uri);
+            var response = await httpResponse.Content.ReadAsStringAsync();
+            return ConvertToProcessResponse(response, processInstanceId);
         }
 
         /// <inheritdoc />
@@ -220,21 +234,11 @@ namespace ProcesioSDK
             {
                 throw new Exception("Empty process instance id.");
             }
-            else if (procesioToken == null
-                || string.IsNullOrEmpty(procesioToken.AccessToken)
-                || string.IsNullOrEmpty(procesioToken.RefreshToken))
-            {
-                throw new Exception("Invalid authentication token.");
-            }
             else if (string.IsNullOrEmpty(fileContent.VariableName))
             {
                 throw new Exception("Empty variable name.");
             }
-
-            if (procesioToken.Expires_in <= 0)
-            {
-                await RefreshToken(procesioToken);
-            }
+            await ValidateAuthentication(procesioToken);
 
             Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), Constants.PROCESIO_UPLOAD_FLOW_FILE);
 
@@ -260,7 +264,7 @@ namespace ProcesioSDK
             var response = await httpResponse.Content.ReadAsStringAsync();
             return ConvertToUploadResponse(response);
         }
-        
+
         /// <inheritdoc />
         public IEnumerable<ProcesioFileContent> GetInputFileInfo(ProcessInstance process)
         {
@@ -275,7 +279,7 @@ namespace ProcesioSDK
                     if (flowFileTypeVar.IsList)
                     {
                         var fileList = JsonConvert.DeserializeObject<IEnumerable<FileContent>>(flowFileTypeVar.DefaultValue.ToString());
-                        foreach(var fileItem in fileList)
+                        foreach (var fileItem in fileList)
                         {
                             result.Add(new ProcesioFileContent(flowFileTypeVar.Name, fileItem));
                         }
@@ -293,6 +297,22 @@ namespace ProcesioSDK
             }
 
             return result;
+        }
+
+
+        private async Task ValidateAuthentication(ProcesioToken procesioToken)
+        {
+            if (procesioToken == null
+                            || string.IsNullOrEmpty(procesioToken.AccessToken)
+                            || string.IsNullOrEmpty(procesioToken.RefreshToken))
+            {
+                throw new Exception("Invalid authentication token!");
+            }
+
+            if (procesioToken.Expires_in <= 0)
+            {
+                await RefreshToken(procesioToken);
+            }
         }
 
         private void ValidateProcesioConfiguration(ProcesioConfig config)
@@ -395,5 +415,80 @@ namespace ProcesioSDK
             return null;
         }
 
+        private Response<ProcessStatusResponse> ConvertToProcessResponse(string response, string processInstanceId)
+        {
+            try
+            {
+                var responseDes = JsonConvert.DeserializeObject<ProcessStatus>(response);
+                var result = new ProcessStatusResponse()
+                {
+                    Variable = responseDes.Variable,
+                    State = responseDes.Status,
+                    Status = ProcesioConverters.ConvertProcessStatus(responseDes.Status),
+                    InstanceId = processInstanceId
+                };
+                return new Response<ProcessStatusResponse>(result, new ErrorResponse());
+            }
+            catch { }
+
+            try
+            {
+                var responseDes = JsonConvert.DeserializeObject<ErrorResponse>(response);
+                return new Response<ProcessStatusResponse>(null, responseDes);
+            }
+            catch
+            {
+                Console.WriteLine("HTTP Response is not of type ErrorResponse.");
+            }
+
+            Console.WriteLine($"Error in converting the Process status result: {response}");
+
+            return null;
+        }
+
+        private Response<ProcessStatusResponse> ConvertToRunProcessResponse(string response)
+        {
+            try
+            {
+                var responseDes = JsonConvert.DeserializeObject<ProcessStatus>(response);
+                var result = new ProcessStatusResponse()
+                {
+                    InstanceId = null,
+                    State = responseDes.Status,
+                    Status = ProcesioConverters.ConvertProcessStatus(responseDes.Status),
+                    Variable = responseDes.Variable,
+                };
+                return new Response<ProcessStatusResponse>(result, new ErrorResponse());
+            }
+            catch { }
+
+            try
+            {
+                var responseDes = JsonConvert.DeserializeObject<LaunchResponse>(response);
+                var result = new ProcessStatusResponse()
+                {
+                    InstanceId = responseDes.InstanceId,
+                    State = 1,
+                    Status = ProcesioConverters.ConvertProcessStatus(1),
+                    Variable = null,
+                };
+                return new Response<ProcessStatusResponse>(result, new ErrorResponse());
+            }
+            catch { }
+
+            try
+            {
+                var responseDes = JsonConvert.DeserializeObject<ErrorResponse>(response);
+                return new Response<ProcessStatusResponse>(null, responseDes);
+            }
+            catch
+            {
+                Console.WriteLine("HTTP Response is not of type ErrorResponse.");
+            }
+
+            Console.WriteLine($"Error in converting the Process status result: {response}");
+
+            return null;
+        }
     }
 }
