@@ -7,6 +7,12 @@ namespace ProcesioSDK.Dto.Data
     public class FileContent
     {
         /// <summary>
+        /// The variable name
+        /// </summary>
+        [JsonIgnore]
+        public string VariableName { get; set; }
+
+        /// <summary>
         /// File content
         /// </summary>
         [JsonIgnore]
