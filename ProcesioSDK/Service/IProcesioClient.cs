@@ -43,14 +43,36 @@ namespace ProcesioSDK
         Task<Response<LaunchResponse>> LaunchProcessInstance(string processInstanceId, ProcesioToken procesioToken, string workspace = null);
 
         /// <summary>
+        /// Launch process instance.
+        /// </summary>
+        /// <param name="processInstanceId">The flow id</param>
+        /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
+        /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+        /// <param name="timeOut"></param>
+        /// <returns>The process status after execution or instance id on timeout</returns>
+        Task<Response<ProcessStatusResponse>> LaunchProcessInstance(string processInstanceId, ProcesioToken procesioToken, string workspace = null, int timeOut = 60);
+
+        /// <summary>
         /// Run process
         /// </summary>
         /// <param name="processId">The process id</param>
         /// <param name="inputValues">The name of the variables used for flow and their values</param>
         /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification method</param>
         /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+        /// <param name="inputFile"></param>
         /// <returns>The launch process response or error response</returns>
-        Task<Response<LaunchResponse>> RunProcess(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null);
+        Task<Response<LaunchResponse>> RunProcess(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null, FileContent inputFile = null);
+
+        /// <summary>
+        /// Run process
+        /// </summary>
+        /// <param name="processId">The process id</param>
+        /// <param name="inputValues">The name of the variables used for flow and their values</param>
+        /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification method</param>
+        /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+        /// <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name</param>
+        /// <returns>The launch process response or error response</returns>
+        Task<Response<LaunchResponse>> RunProcess(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null, List<FileContent> inputFiles = null);
 
         /// <summary>
         /// Run process and wait for the process status. If timeout expires, then the process instance id will be saved.
@@ -59,9 +81,22 @@ namespace ProcesioSDK
         /// <param name="inputValues">The input values used by the process</param>
         /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
         /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+        /// <param name="inputFile">If process has input file(s) - Required: VariableName, Data, Name</param>
         /// <param name="timeOut">number of seconds to wait for the process or return the instance id</param>
-        /// <returns></returns>
-        Task<Response<ProcessStatusResponse>> RunProcessSync(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null, int timeOut = 60);
+        /// <returns>The process status after execution or instance id on timeout</returns>
+        Task<Response<ProcessStatusResponse>> RunProcess(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null, FileContent inputFile = null, int timeOut = 60);
+
+        /// <summary>
+        /// Run process and wait for the process status. If timeout expires, then the process instance id will be saved.
+        /// </summary>
+        /// <param name="processId">The process id to execute</param>
+        /// <param name="inputValues">The input values used by the process</param>
+        /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
+        /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+        /// <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name</param>
+        /// <param name="timeOut">number of seconds to wait for the process or return the instance id</param>
+        /// <returns>The process status after execution or instance id on timeout</returns>
+        Task<Response<ProcessStatusResponse>> RunProcess(string processId, Dictionary<string, object> inputValues, ProcesioToken procesioToken, string workspace = null, List<FileContent> inputFiles = null, int timeOut = 60);
 
         /// <summary>
         /// Get the process status after or during execution
@@ -79,14 +114,14 @@ namespace ProcesioSDK
         /// <param name="fileContent">The file details, as file path, variable name, lenght</param>
         /// <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
         /// <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
-        /// <returns>File id</returns>
-        Task<Response<UploadResponse>> UploadInputFileToProcessInstance(string processInstanceId, ProcesioFileContent fileContent, ProcesioToken procesioToken, string workspace = null);
+        /// <returns>The procesio generated file id to match the input</returns>
+        Task<Response<UploadResponse>> UploadInputFileToProcessInstance(string processInstanceId, FileContent fileContent, ProcesioToken procesioToken, string workspace = null);
 
         /// <summary>
         /// Gets the file information required for the file upload method
         /// </summary>
         /// <param name="process"></param>
-        /// <returns></returns>
-        IEnumerable<ProcesioFileContent> GetInputFileInfo(ProcessInstance process);
+        /// <returns>A list of FileContent for each input file. This object contains the fileId generated by the Procesio system.</returns>
+        IEnumerable<FileContent> GetInputFileInfo(ProcessInstance process);
     }
 }
