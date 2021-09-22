@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Net;
 
 namespace ProcesioSDK.Dto.Data
 {
@@ -15,6 +16,12 @@ namespace ProcesioSDK.Dto.Data
 
         [JsonProperty("refresh_token")]
         public string RefreshToken { get; set; }
+
+        /// <summary>
+        /// If status code is not 200OK then Authentication failed
+        /// </summary>
+        [JsonIgnore]
+        public HttpStatusCode StatusCode { get; set; }
         
         public ProcesioToken() { }
     }
