@@ -204,8 +204,9 @@ namespace ProcesioSDK
             {
                 Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.PROCESIO_RUN_METHOD, processId));
                 InitBasicClientHeaders(procesioToken, workspace);
-                
-                var payload = new { 
+
+                var payload = new
+                {
                     Payload = inputValues,
                     ConnectionId = ""
                 };
@@ -335,26 +336,36 @@ namespace ProcesioSDK
             Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), Constants.PROCESIO_UPLOAD_FLOW_FILE);
 
             _client.DefaultRequestHeaders.Clear();
-            _client.DefaultRequestHeaders.Add("Accept", "application/json");
             _client.DefaultRequestHeaders.Add("fileId", fileContent.FileId.ToString());
             _client.DefaultRequestHeaders.Add("flowInstanceId", processInstanceId);
             _client.DefaultRequestHeaders.Add("variableName", fileContent.VariableName);
             _client.DefaultRequestHeaders.Add(Constants.WORKSPACE, workspace);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Constants.BEARER, procesioToken.AccessToken);
 
-            MultipartFormDataContent form = new MultipartFormDataContent();
-            using (var memoryStream = new MemoryStream())
+            using (var form = new MultipartFormDataContent())
             {
-                fileContent.Data.CopyTo(memoryStream);
-                var fileByte = memoryStream.ToArray();
-                form.Add(new ByteArrayContent(fileByte, 0, fileByte.Length), Constants.FILE_NAME, fileContent.Name);
-                form.Add(new StringContent(fileContent.Name), Constants.FILE_NAME);
-                form.Add(new StringContent(fileByte.Length.ToString()), Constants.LENGTH);
-            }
+                using (var streamContent = new StreamContent(fileContent.Data))
+                {
+                    using (var fileByteArray = new ByteArrayContent(await streamContent.ReadAsByteArrayAsync()))
+                    {
+                        fileByteArray.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
 
-            var httpResponse = await _client.PostAsync(uri, form);
-            var response = await httpResponse.Content.ReadAsStringAsync();
-            return ConvertToUploadResponse(response);
+                        form.Add(fileByteArray, Constants.FILE_NAME);
+
+                        streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                        {
+                            Name = "package",
+                            FileName = fileContent.Name
+                        };
+                        streamContent.Headers.Remove("Content-Type");
+                        form.Add(streamContent);
+
+                        var httpResponse = await _client.PostAsync(uri, form);
+                        var response = await httpResponse.Content.ReadAsStringAsync();
+                        return ConvertToUploadResponse(response);
+                    }
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -512,12 +523,11 @@ namespace ProcesioSDK
 
         private Response<UploadResponse> ConvertToUploadResponse(string response)
         {
-            try
+            if (Guid.TryParse(response, out Guid responseGuid))
             {
-                var responseDes = JsonConvert.DeserializeObject<UploadResponse>(response);
+                var responseDes = new UploadResponse() { FileID = response };
                 return new Response<UploadResponse>(responseDes, new ErrorResponse());
             }
-            catch { }
 
             try
             {
