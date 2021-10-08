@@ -52,9 +52,9 @@ namespace ProcesioSDK
         /// <inheritdoc />
         public async Task<ProcesioToken> Authenticate(ProcesioUser procesioUser)
         {
-            if (procesioUser.GrantType == null
-                || procesioUser.UserName == null
-                || procesioUser.Password == null)
+            if (string.IsNullOrEmpty(procesioUser.GrantType)
+                || string.IsNullOrEmpty(procesioUser.UserName)
+                || string.IsNullOrEmpty(procesioUser.Password))
             {
                 return null;
             }
@@ -136,13 +136,33 @@ namespace ProcesioSDK
 
             Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.PROCESIO_PUBLISH_METHOD, processId));
             InitBasicClientHeaders(procesioToken, workspace);
-
-            var serializedInputValues = JsonConvert.SerializeObject(inputValues);
-            var httpContent = new StringContent(serializedInputValues, Encoding.UTF8, "application/json");
-            var httpResponse = await _client.PostAsync(uri, httpContent);
-            var response = await httpResponse.Content.ReadAsStringAsync();
-            return ConvertToProcessInstance(response);
+            return await DoPublishProcess(inputValues, uri);
         }
+
+        /// <inheritdoc />
+        public async Task<Response<ProcessInstance>> PublishProcess(
+            string processId,
+            Dictionary<string, object> inputValues,
+            ProcesioApiKey procesioApiKey,
+            string workspace = null)
+        {
+            if (string.IsNullOrEmpty(processId))
+            {
+                throw new Exception("Empty process id.");
+            }
+            ValidateAuthentication(procesioApiKey);
+
+            if (inputValues == null)
+            {
+                inputValues = new Dictionary<string, object>();
+            }
+
+            Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.PROCESIO_PUBLISH_METHOD, processId));
+            InitBasicClientHeaders(procesioApiKey, workspace);
+            return await DoPublishProcess(inputValues, uri);
+        }
+
+        
 
         /// <inheritdoc />
         public IEnumerable<FileContent> GetProcessInputFileContent(ProcessInstance process)
@@ -198,6 +218,23 @@ namespace ProcesioSDK
         }
 
         /// <inheritdoc />
+        public async Task UploadProcessInputFiles(ProcessInstance processInstance, List<FileContent> inputFiles, ProcesioApiKey procesioApiKey, string workspace = null)
+        {
+            var fileListToUpload = GetProcessInputFileContent(processInstance);
+            UpdateFileInfo(inputFiles, fileListToUpload);
+
+            foreach (var fileInput in fileListToUpload)
+            {
+                var fileUploadResponse = await UploadProcessInputFiles(processInstance, fileInput, procesioApiKey, workspace);
+                if (!fileUploadResponse.IsSuccess || !fileUploadResponse.Content.FileID.Equals(fileInput.FileId.ToString()))
+                {
+                    var errorResponse = JsonConvert.SerializeObject(fileUploadResponse.Error);
+                    throw new ProcessFileUploadException(errorResponse);
+                }
+            }
+        }
+
+        /// <inheritdoc />
         public async Task<Response<UploadResponse>> UploadProcessInputFiles(ProcessInstance processInstance, FileContent inputFile, ProcesioToken procesioToken, string workspace = null)
         {
             if (string.IsNullOrEmpty(processInstance.Id.ToString()))
@@ -218,32 +255,34 @@ namespace ProcesioSDK
             _client.DefaultRequestHeaders.Add("variableName", inputFile.VariableName);
             _client.DefaultRequestHeaders.Add(Constants.WORKSPACE, workspace);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Constants.BEARER, procesioToken.AccessToken);
-
-            using (var form = new MultipartFormDataContent())
-            {
-                using (var streamContent = new StreamContent(inputFile.Data))
-                {
-                    using (var fileByteArray = new ByteArrayContent(await streamContent.ReadAsByteArrayAsync()))
-                    {
-                        fileByteArray.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
-
-                        form.Add(fileByteArray, Constants.FILE_NAME);
-
-                        streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
-                        {
-                            Name = "package",
-                            FileName = inputFile.Name
-                        };
-                        streamContent.Headers.Remove("Content-Type");
-                        form.Add(streamContent);
-
-                        var httpResponse = await _client.PostAsync(uri, form);
-                        var response = await httpResponse.Content.ReadAsStringAsync();
-                        return ConvertToUploadResponse(response);
-                    }
-                }
-            }
+            return await DoFileUploadToProcess(inputFile, uri);
         }
+
+        /// <inheritdoc />
+        public async Task<Response<UploadResponse>> UploadProcessInputFiles(ProcessInstance processInstance, FileContent inputFile, ProcesioApiKey procesioApiKey, string workspace = null)
+        {
+            if (string.IsNullOrEmpty(processInstance.Id.ToString()))
+            {
+                throw new Exception("Empty process instance id.");
+            }
+            else if (string.IsNullOrEmpty(inputFile.VariableName))
+            {
+                throw new Exception("Empty variable name.");
+            }
+            ValidateAuthentication(procesioApiKey);
+
+            Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), Constants.PROCESIO_UPLOAD_FLOW_FILE);
+
+            _client.DefaultRequestHeaders.Clear();
+            _client.DefaultRequestHeaders.Add("fileId", inputFile.FileId.ToString());
+            _client.DefaultRequestHeaders.Add("flowInstanceId", processInstance.Id.ToString());
+            _client.DefaultRequestHeaders.Add("variableName", inputFile.VariableName);
+            _client.DefaultRequestHeaders.Add(Constants.WORKSPACE, workspace);
+            _client.DefaultRequestHeaders.Add(Constants.API_KEY_NAME, procesioApiKey.ApiKeyName);
+            _client.DefaultRequestHeaders.Add(Constants.API_KEY_VALUE, procesioApiKey.ApiKeyValue);            
+            return await DoFileUploadToProcess(inputFile, uri);
+        }
+
 
 
         /// <inheritdoc />
@@ -270,6 +309,29 @@ namespace ProcesioSDK
         }
 
         /// <inheritdoc />
+        public async Task<Response<LaunchResponse>> LaunchProcessInstance(string processInstanceId, ProcesioApiKey procesioApiKey, string workspace = null)
+        {
+            if (string.IsNullOrEmpty(processInstanceId))
+            {
+                throw new Exception("Empty process instance id.");
+            }
+            ValidateAuthentication(procesioApiKey);
+
+            Uri uri = new Uri(ProcesioPath.WebApiUrl(_procesioConfig), string.Format(Constants.PROCESIO_LAUNCH_METHOD, processInstanceId));
+            InitBasicClientHeaders(procesioApiKey, workspace);
+
+            var payload = new
+            {
+                ConnectionId = ""
+            };
+            var serializedInputValues = JsonConvert.SerializeObject(payload);
+            var httpContent = new StringContent(serializedInputValues, Encoding.UTF8, "application/json");
+            var httpResponse = await _client.PostAsync(uri, httpContent);
+            var response = await httpResponse.Content.ReadAsStringAsync();
+            return ConvertToLaunchResult(response);
+        }
+
+        /// <inheritdoc />
         public async Task<Response<ProcessStatusResponse>> LaunchProcessInstance(string processInstanceId, ProcesioToken procesioToken, string workspace = null, int timeOut = 60)
         {
             if (string.IsNullOrEmpty(processInstanceId))
@@ -280,6 +342,29 @@ namespace ProcesioSDK
             Uri uri = BuildSyncUri(Constants.PROCESIO_LAUNCH_METHOD, processInstanceId, timeOut);
 
             InitBasicClientHeaders(procesioToken, workspace);
+
+            var payload = new
+            {
+                ConnectionId = ""
+            };
+            var serializedInputValues = JsonConvert.SerializeObject(payload);
+            var httpContent = new StringContent(serializedInputValues, Encoding.UTF8, "application/json");
+            var httpResponse = await _client.PostAsync(uri, httpContent);
+            var response = await httpResponse.Content.ReadAsStringAsync();
+            return ConvertToRunProcessResponse(response);
+        }
+
+        /// <inheritdoc />
+        public async Task<Response<ProcessStatusResponse>> LaunchProcessInstance(string processInstanceId, ProcesioApiKey procesioApiKey, string workspace = null, int timeOut = 60)
+        {
+            if (string.IsNullOrEmpty(processInstanceId))
+            {
+                throw new Exception("Empty process instance id.");
+            }
+            ValidateAuthentication(procesioApiKey);
+            Uri uri = BuildSyncUri(Constants.PROCESIO_LAUNCH_METHOD, processInstanceId, timeOut);
+
+            InitBasicClientHeaders(procesioApiKey, workspace);
 
             var payload = new
             {
@@ -399,6 +484,16 @@ namespace ProcesioSDK
             }
         }
 
+        private void ValidateAuthentication(ProcesioApiKey procesioApiKey)
+        {
+            if (procesioApiKey == null
+                            || string.IsNullOrEmpty(procesioApiKey.ApiKeyName)
+                            || string.IsNullOrEmpty(procesioApiKey.ApiKeyValue))
+            {
+                throw new Exception("Invalid authentication api key!");
+            }
+        }
+
         private void ValidateProcesioConfiguration(ProcesioConfig config)
         {
             if (string.IsNullOrEmpty(config.ServerUri))
@@ -421,13 +516,23 @@ namespace ProcesioSDK
 
         private void InitBasicClientHeaders(ProcesioToken procesioToken, string workspace)
         {
-            _client.DefaultRequestHeaders.Clear();
-            _client.DefaultRequestHeaders.Add("Accept", "application/json");
-            _client.DefaultRequestHeaders.Add(Constants.WORKSPACE, workspace);
+            SetWorkspace(workspace);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Constants.BEARER, procesioToken.AccessToken);
         }
 
+        private void InitBasicClientHeaders(ProcesioApiKey procesioApiKey, string workspace)
+        {
+            SetWorkspace(workspace);
+            _client.DefaultRequestHeaders.Add(Constants.API_KEY_NAME, procesioApiKey.ApiKeyName);
+            _client.DefaultRequestHeaders.Add(Constants.API_KEY_VALUE, procesioApiKey.ApiKeyValue);
+        }
 
+        private void SetWorkspace(string workspace)
+        {
+            _client.DefaultRequestHeaders.Clear();
+            _client.DefaultRequestHeaders.Add("Accept", "application/json");
+            _client.DefaultRequestHeaders.Add(Constants.WORKSPACE, workspace);
+        }
 
         private void UpdateFileInfo(IEnumerable<FileContent> inputFiles, IEnumerable<FileContent> variableInformation)
         {
@@ -635,6 +740,48 @@ namespace ProcesioSDK
 
             return inputValues;
         }
+
+        #endregion
+
+        #region DoActions
+
+        private async Task<Response<ProcessInstance>> DoPublishProcess(Dictionary<string, object> inputValues, Uri uri)
+        {
+            var serializedInputValues = JsonConvert.SerializeObject(inputValues);
+            var httpContent = new StringContent(serializedInputValues, Encoding.UTF8, "application/json");
+            var httpResponse = await _client.PostAsync(uri, httpContent);
+            var response = await httpResponse.Content.ReadAsStringAsync();
+            return ConvertToProcessInstance(response);
+        }
+
+        private async Task<Response<UploadResponse>> DoFileUploadToProcess(FileContent inputFile, Uri uri)
+        {
+            using (var form = new MultipartFormDataContent())
+            {
+                using (var streamContent = new StreamContent(inputFile.Data))
+                {
+                    using (var fileByteArray = new ByteArrayContent(await streamContent.ReadAsByteArrayAsync()))
+                    {
+                        fileByteArray.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+
+                        form.Add(fileByteArray, Constants.FILE_NAME);
+
+                        streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                        {
+                            Name = "package",
+                            FileName = inputFile.Name
+                        };
+                        streamContent.Headers.Remove("Content-Type");
+                        form.Add(streamContent);
+
+                        var httpResponse = await _client.PostAsync(uri, form);
+                        var response = await httpResponse.Content.ReadAsStringAsync();
+                        return ConvertToUploadResponse(response);
+                    }
+                }
+            }
+        }
+
 
         #endregion
     }

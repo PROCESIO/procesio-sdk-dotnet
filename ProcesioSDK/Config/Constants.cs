@@ -19,5 +19,8 @@
         public const string LENGTH = "Length";
         public const string RUN_SYNC = "runSynchronous";
         public const string SECONDS_TIMEOUT = "secondsTimeOut";
+
+        public const string API_KEY_NAME = "key";
+        public const string API_KEY_VALUE = "value";
     }
 }
