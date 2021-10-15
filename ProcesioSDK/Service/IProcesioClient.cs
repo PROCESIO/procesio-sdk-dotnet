@@ -1,10 +1,15 @@
 ﻿using ProcesioSDK.Dto;
 using ProcesioSDK.Dto.Data;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ProcesioSDK
 {
+    /// <summary>
+    /// Procesio Client used to communicate with the Procesio web services
+    /// </summary>
     public interface IProcesioClient
     {
         /// <summary>

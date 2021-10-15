@@ -136,6 +136,11 @@
             </summary>
             <param name="errors">The message that describes the error.</param>
         </member>
+        <member name="T:ProcesioSDK.IProcesioClient">
+            <summary>
+            Procesio Client used to communicate with the Procesio web services
+            </summary>
+        </member>
         <member name="M:ProcesioSDK.IProcesioClient.Authenticate(ProcesioSDK.Dto.Data.ProcesioUser)">
             <summary>
             Authenticate user by credentials 
@@ -143,7 +148,7 @@
             <param name="procesioUser">The Authentication requires user Procesio credentials, as username, password, realm,
              client id and grant type.</param>
             <returns>Procesio Tokens, as acces token, refresh token and token valability.</returns>
-            <exception cref="!:HttpRequestException">This exception is thrown if the Procesio Authentication request failed</exception>
+            <exception cref="T:System.Net.Http.HttpRequestException">This exception is thrown if the Procesio Authentication request failed</exception>
         </member>
         <member name="M:ProcesioSDK.IProcesioClient.RefreshToken(ProcesioSDK.Dto.Data.ProcesioToken)">
             <summary>
@@ -220,7 +225,7 @@
             <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
             <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
             <returns>The launch process response or error response</returns>
-            <exception cref="!:ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
             <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
             <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
@@ -235,7 +240,7 @@
             <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
             <param name="timeOut">number of seconds to wait for the process or return the instance id</param>
             <returns>The process status after execution or instance id on timeout</returns>
-            <exception cref="!:ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
             <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
             <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
@@ -249,7 +254,7 @@
             <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
             <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
             <returns>The launch process response or error response</returns>
-            <exception cref="!:ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
             <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
             <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
@@ -264,7 +269,7 @@
             <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
             <param name="timeOut">number of seconds to wait for the process or return the instance id</param>
             <returns>The process status after execution or instance id on timeout</returns>
-            <exception cref="!:ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
             <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
             <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
@@ -334,9 +339,7 @@
             <returns>A list of FileContent for each input file. This object contains the fileId generated by the Procesio system.</returns>
         </member>
         <member name="T:ProcesioSDK.ProcesioClient">
-            <summary>
-            Procesio Client used to communicate with the Procesio web services
-            </summary>
+            <!-- Failed to insert some or all of included XML --><include file="ProcesioSDK.xml" path="/*" />
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
