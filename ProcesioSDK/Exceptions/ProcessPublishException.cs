@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using ProcesioSDK.Contracts;
+using System;
+using System.Collections.Generic;
 
 namespace ProcesioSDK
 {
@@ -32,6 +35,15 @@ namespace ProcesioSDK
         public ProcessPublishException(string? message, Exception? innerException) : base(message, innerException)
         {
 
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the ProcesioSDK.ProcessPublishException class with a specified error message.
+        /// </summary>
+        /// <param name="errors">The message that describes the error.</param>
+        public ProcessPublishException(IEnumerable<IErrorResponse> errors) : base(JsonConvert.SerializeObject(errors))
+        {
         }
     }
 }
