@@ -15,12 +15,17 @@
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>
 			$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb;.json
 		</AllowedOutputExtensionsInPackageBuildOutputFolder>
-		<Version>1.1</Version>
+		<Version>1.1.2</Version>
 		<Authors>Ringhel</Authors>
 		<Product>Procesio</Product>
 		<RepositoryUrl>https://github.com/PROCESIO/procesio-sdk-dotnet.git</RepositoryUrl>
 		<AssemblyName>ProcesioSDK</AssemblyName>
 		<RootNamespace>ProcesioSDK</RootNamespace>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DocumentationFile>C:\GitHub Repositories\procesio-sdk-dotnet\ProcesioSDK\ProcesioSDK.xml</DocumentationFile>
+	  <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
 	</PropertyGroup>
 
   <ItemGroup>
