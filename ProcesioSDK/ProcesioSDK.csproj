@@ -28,6 +28,16 @@
 	  <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <None Remove="ProcesioSDK.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="ProcesioSDK.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.10" />
