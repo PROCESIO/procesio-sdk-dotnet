@@ -25,6 +25,8 @@
 For more information visit https://procesio.com</Description>
 		<PackageProjectUrl>https://github.com/PROCESIO/procesio-sdk-dotnet.git</PackageProjectUrl>
 		<PackageTags>Procesio, SDK, .NET, C#, Core</PackageTags>
+		<PackageLicenseExpression>https://github.com/PROCESIO/procesio-sdk-dotnet/blob/production/LICENSE</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
