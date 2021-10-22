@@ -136,6 +136,11 @@
             </summary>
             <param name="errors">The message that describes the error.</param>
         </member>
+        <member name="T:ProcesioSDK.IProcesioClient">
+            <summary>
+            Procesio Client used to communicate with the Procesio web services
+            </summary>
+        </member>
         <member name="M:ProcesioSDK.IProcesioClient.Authenticate(ProcesioSDK.Dto.Data.ProcesioUser)">
             <summary>
             Authenticate user by credentials 
@@ -143,7 +148,7 @@
             <param name="procesioUser">The Authentication requires user Procesio credentials, as username, password, realm,
              client id and grant type.</param>
             <returns>Procesio Tokens, as acces token, refresh token and token valability.</returns>
-            <exception cref="!:HttpRequestException">This exception is thrown if the Procesio Authentication request failed</exception>
+            <exception cref="T:System.Net.Http.HttpRequestException">This exception is thrown if the Procesio Authentication request failed</exception>
         </member>
         <member name="M:ProcesioSDK.IProcesioClient.RefreshToken(ProcesioSDK.Dto.Data.ProcesioToken)">
             <summary>
@@ -220,7 +225,7 @@
             <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
             <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
             <returns>The launch process response or error response</returns>
-            <exception cref="!:ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
             <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
             <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
@@ -235,7 +240,7 @@
             <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
             <param name="timeOut">number of seconds to wait for the process or return the instance id</param>
             <returns>The process status after execution or instance id on timeout</returns>
-            <exception cref="!:ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
             <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
             <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
@@ -249,7 +254,7 @@
             <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
             <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
             <returns>The launch process response or error response</returns>
-            <exception cref="!:ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
             <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
             <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
@@ -264,7 +269,7 @@
             <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
             <param name="timeOut">number of seconds to wait for the process or return the instance id</param>
             <returns>The process status after execution or instance id on timeout</returns>
-            <exception cref="!:ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
             <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
             <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
@@ -353,61 +358,201 @@
             <exception cref="T:System.ArgumentNullException">This exception is thrown if the Procesio Configurationb is not valid</exception>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.Authenticate(ProcesioSDK.Dto.Data.ProcesioUser)">
-            <inheritdoc />
+            <summary>
+            Authenticate user by credentials 
+            </summary>
+            <param name="procesioUser">The Authentication requires user Procesio credentials, as username, password, realm,
+             client id and grant type.</param>
+            <returns>Procesio Tokens, as acces token, refresh token and token valability.</returns>
+            <exception cref="T:System.Net.Http.HttpRequestException">This exception is thrown if the Procesio Authentication request failed</exception>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.RefreshToken(ProcesioSDK.Dto.Data.ProcesioToken)">
-            <inheritdoc />
+            <summary>
+            Refresh user token valability
+            </summary>
+            <param name="procesioToken">The Refresh Token requires acces token, refresh token and token valability.</param>
+            <returns>True, if token was updated, otherwise false.</returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.PublishProcess(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},ProcesioSDK.Dto.Data.ProcesioToken,System.String)">
-            <inheritdoc />
+            <summary>
+            Publish the process to new runtime instance
+            </summary>
+            <param name="processId">The process id</param>
+            <param name="inputValues">The name of the variables used for flow and their values</param>
+            <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <returns>The generated process instance or error response</returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.PublishProcess(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},ProcesioSDK.Dto.Data.ProcesioApiKey,System.String)">
-            <inheritdoc />
+            <summary>
+            Publish the process to new runtime instance
+            </summary>
+            <param name="processId">The process id</param>
+            <param name="inputValues">The name of the variables used for flow and their values</param>
+            <param name="procesioApiKey">The api key name and value required to authenticate every Procesio request</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <returns>The generated process instance or error response</returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.GetProcessInputFileContent(ProcesioSDK.Dto.Data.ProcessInstance)">
-            <inheritdoc />
+            <summary>
+            Gets the file information required for the process file upload method
+            </summary>
+            <param name="process"></param>
+            <returns>A list of FileContent for each input file. This object contains the fileId generated by the Procesio system.</returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.UploadProcessInputFiles(ProcesioSDK.Dto.Data.ProcessInstance,System.Collections.Generic.List{ProcesioSDK.Dto.Data.FileContent},ProcesioSDK.Dto.Data.ProcesioToken,System.String)">
-            <inheritdoc />
+            <summary>
+            Upload each input file used for process instance if the process requires it
+            </summary>
+            <param name="processInstance">Process instance, returned by publish process method</param>
+            <param name="inputFiles">The file details, as file path, variable name, lenght</param>
+            <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <returns>The procesio generated file id to match the input</returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.UploadProcessInputFiles(ProcesioSDK.Dto.Data.ProcessInstance,System.Collections.Generic.List{ProcesioSDK.Dto.Data.FileContent},ProcesioSDK.Dto.Data.ProcesioApiKey,System.String)">
-            <inheritdoc />
+            <summary>
+            Upload each input file used for process instance if the process requires it
+            </summary>
+            <param name="processInstance">Process instance, returned by publish process method</param>
+            <param name="inputFiles">The file details, as file path, variable name, lenght</param>
+            <param name="procesioApiKey">The api key name and value required to authenticate every Procesio request</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <returns>The procesio generated file id to match the input</returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.UploadProcessInputFiles(ProcesioSDK.Dto.Data.ProcessInstance,ProcesioSDK.Dto.Data.FileContent,ProcesioSDK.Dto.Data.ProcesioToken,System.String)">
-            <inheritdoc />
+            <summary>
+            Upload the input file used for a process instance
+            </summary>
+            <param name="processInstance">Process instance, returned by publish process method</param>
+            <param name="inputFile">The file details, as file path, variable name, lenght</param>
+            <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <returns></returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.UploadProcessInputFiles(ProcesioSDK.Dto.Data.ProcessInstance,ProcesioSDK.Dto.Data.FileContent,ProcesioSDK.Dto.Data.ProcesioApiKey,System.String)">
-            <inheritdoc />
+            <summary>
+            Upload the input file used for a process instance
+            </summary>
+            <param name="processInstance">Process instance, returned by publish process method</param>
+            <param name="inputFile">The file details, as file path, variable name, lenght</param>
+            <param name="procesioApiKey">The api key name and value required to authenticate every Procesio request</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <returns></returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.LaunchProcessInstance(System.String,ProcesioSDK.Dto.Data.ProcesioToken,System.String)">
-            <inheritdoc />
+            <summary>
+            Launch process instance.
+            </summary>
+            <param name="processInstanceId">The flow id</param>
+            <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <returns>The launch process response or error response</returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.LaunchProcessInstance(System.String,ProcesioSDK.Dto.Data.ProcesioApiKey,System.String)">
-            <inheritdoc />
+            <summary>
+            Launch process instance.
+            </summary>
+            <param name="processInstanceId">The flow id</param>
+            <param name="procesioApiKey">The api key name and value required to authenticate every Procesio request</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <returns>The launch process response or error response</returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.LaunchProcessInstance(System.String,ProcesioSDK.Dto.Data.ProcesioToken,System.String,System.Int32)">
-            <inheritdoc />
+            <summary>
+            Launch process instance.
+            </summary>
+            <param name="processInstanceId">The flow id</param>
+            <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <param name="timeOut"></param>
+            <returns>The process status after execution or instance id on timeout</returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.LaunchProcessInstance(System.String,ProcesioSDK.Dto.Data.ProcesioApiKey,System.String,System.Int32)">
-            <inheritdoc />
+            <summary>
+            Launch process instance.
+            </summary>
+            <param name="processInstanceId">The flow id</param>
+            <param name="procesioApiKey">The api key name and value required to authenticate every Procesio request</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <param name="timeOut"></param>
+            <returns>The process status after execution or instance id on timeout</returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.RunProcess(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},ProcesioSDK.Dto.Data.ProcesioToken,System.String,System.Collections.Generic.List{ProcesioSDK.Dto.Data.FileContent})">
-            <inheritdoc />
+            <summary>
+            Run process
+            </summary>
+            <param name="processId">The process id</param>
+            <param name="inputValues">The name of the variables used for flow and their values</param>
+            <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification method</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
+            <returns>The launch process response or error response</returns>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
+            <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.RunProcess(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},ProcesioSDK.Dto.Data.ProcesioToken,System.String,System.Collections.Generic.List{ProcesioSDK.Dto.Data.FileContent},System.Int32)">
-            <inheritdoc />
+            <summary>
+            Run process and wait for the process status. If timeout expires, then the process instance id will be saved.
+            </summary>
+            <param name="processId">The process id to execute</param>
+            <param name="inputValues">The input values used by the process</param>
+            <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
+            <param name="timeOut">number of seconds to wait for the process or return the instance id</param>
+            <returns>The process status after execution or instance id on timeout</returns>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
+            <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.RunProcess(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},ProcesioSDK.Dto.Data.ProcesioApiKey,System.String,System.Collections.Generic.List{ProcesioSDK.Dto.Data.FileContent})">
-            <inheritdoc />
+            <summary>
+            Run process
+            </summary>
+            <param name="processId">The process id</param>
+            <param name="inputValues">The name of the variables used for flow and their values</param>
+            <param name="procesioApiKey">The api key name and value required to authenticate every Procesio request</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
+            <returns>The launch process response or error response</returns>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
+            <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.RunProcess(System.String,System.Collections.Generic.Dictionary{System.String,System.Object},ProcesioSDK.Dto.Data.ProcesioApiKey,System.String,System.Collections.Generic.List{ProcesioSDK.Dto.Data.FileContent},System.Int32)">
-            <inheritdoc />
+            <summary>
+            Run process and wait for the process status. If timeout expires, then the process instance id will be saved.
+            </summary>
+            <param name="processId">The process id to execute</param>
+            <param name="inputValues">The input values used by the process</param>
+            <param name="procesioApiKey">The api key name and value required to authenticate every Procesio request</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <param name="inputFiles">If process has input file(s) - Required: VariableName, Data, Name. Can be null if no files are required.</param>
+            <param name="timeOut">number of seconds to wait for the process or return the instance id</param>
+            <returns>The process status after execution or instance id on timeout</returns>
+            <exception cref="T:System.ArgumentNullException">This exception is thrown if processId is null or empty</exception>
+            <exception cref="T:ProcesioSDK.ProcessPublishException">This exception is thrown if the Process publish operation has failed</exception>
+            <exception cref="T:ProcesioSDK.ProcessFileUploadException">This exception is thrown if the Input file upload operation has failed for either of the input files</exception>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.GetProcessStatus(System.String,ProcesioSDK.Dto.Data.ProcesioToken,System.String)">
-            <inheritdoc />
+            <summary>
+            Get the process status after or during execution
+            </summary>
+            <param name="processInstanceId">Process instance id, returned by publish process method</param>
+            <param name="procesioToken">The access token, refresh token and token valability, returned by Authentification</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <returns>The process status response</returns>
         </member>
         <member name="M:ProcesioSDK.ProcesioClient.GetProcessStatus(System.String,ProcesioSDK.Dto.Data.ProcesioApiKey,System.String)">
-            <inheritdoc />
+            <summary>
+            Get the process status after or during execution
+            </summary>
+            <param name="processInstanceId">Process instance id, returned by publish process method</param>
+            <param name="procesioApiKey">The api key name and value required to authenticate every Procesio request</param>
+            <param name="workspace">The workspace name. Can be null if working on the personal workspace.</param>
+            <returns>The process status response</returns>
         </member>
     </members>
 </doc>
