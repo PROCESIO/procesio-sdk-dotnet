@@ -21,6 +21,10 @@
 		<RepositoryUrl>https://github.com/PROCESIO/procesio-sdk-dotnet.git</RepositoryUrl>
 		<AssemblyName>ProcesioSDK</AssemblyName>
 		<RootNamespace>ProcesioSDK</RootNamespace>
+		<Description>The PROCESIO SDK addresses the essential needs to use the PROCESIO platform from inside your .Net Core application. 
+For more information visit https://procesio.com</Description>
+		<PackageProjectUrl>https://github.com/PROCESIO/procesio-sdk-dotnet.git</PackageProjectUrl>
+		<PackageTags>Procesio, SDK, .NET, C#, Core</PackageTags>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
