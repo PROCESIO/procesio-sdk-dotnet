@@ -19,7 +19,8 @@ There are multiple ways to install ProcesioSDK.
  ```
  PM> Install-Package ProcesioSDK
  ```
-### Manager NuGet Packages for Solution
+
+### Manage NuGet Packages for Solution
 
  - in Visual Studio use the "Tools" -> "NuGet Package Manager" -> "Manage NuGet Packages for Solution" menu
  - go to "Browse" tab
@@ -101,7 +102,7 @@ There are multiple ways to install ProcesioSDK.
  
  There is the possibility to synchronously run the process. And, in addition to the above parameters, a timeout is required.
 	
- ### Example: Execute a process which sends an email (without attachments)
+ ## Example: Execute a process which sends an email (without attachments)
 	
 	```
 	// Publish the process
