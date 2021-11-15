@@ -8,18 +8,29 @@
 
 </div>
 
-## 📦 Installation & Usage
+## 📦 Installation
 
-There are multiple ways to install ProcesioSDK:
+There are multiple ways to install ProcesioSDK.
 
-1. In Visual Studio use the "Tools" -> "NuGet Package Manager" -> "Package Manager Console" menu. And run the following command:
-```
-PM> Install-Package ProcesioSDK
-```
-2. In Visual Studio use the "Tools" -> "NuGet Package Manager" -> "Manage NuGet Packages for Solution" menu. In "Browse" tab search for **ProcesioSDK**, select it, select your project and press the "Install" button.
-3. Build **ProcesioSDK** from this repository and add it to your project.
+### Package Manager Console
 
-### Usage
+ - in Visual Studio use the "Tools" -> "NuGet Package Manager" -> "Package Manager Console" menu
+ - run the following command:
+ ```
+ PM> Install-Package ProcesioSDK
+ ```
+### Manager NuGet Packages for Solution
+
+ - in Visual Studio use the "Tools" -> "NuGet Package Manager" -> "Manage NuGet Packages for Solution" menu
+ - go to "Browse" tab
+ - search for **ProcesioSDK** and select it
+ - in the ProcesioSDK pane select your project and press the "Install" button
+
+### Build from repo
+
+ Build **ProcesioSDK** from this repository and add it to your project.
+
+## Usage
 
  First you need to import the appropriate resources:
  ```
@@ -52,10 +63,10 @@ PM> Install-Package ProcesioSDK
  
  The first step requires you to publish that process with all the needed inputs, defined when you created the process. 
  To call the PublishProcess method, you will need 4 parameters:
- (1) the process id to execute; 
- (2) the input values used by the process, a dictionary that contains the name of the variables used for process and their values; 
- (3) the ProcesioTokens object, returned by Authenticate method; 
- (4) the workspace name, which can be null if you are working on the personal workspace.
+ 1. the process id to execute; 
+ 2. the input values used by the process, a dictionary that contains the name of the variables used for process and their values; 
+ 3. the ProcesioTokens object, returned by Authenticate method; 
+ 4. the workspace name, which can be null if you are working on the personal workspace.
  
  This call will return a ProcessInstance object from which you require 2 infos: instanceID (Id) and the variable list (Variables). Instance id is needed for both uploading a file and for launching the process. Variable list is needed for uploading the files.
 	
@@ -63,18 +74,18 @@ PM> Install-Package ProcesioSDK
  
  The second step, upload file, is optional and only needed for processes that have file inputs. 
  To run this step you will need:
- (1) the instanceID;
- (2) the file details, as file path, variable name, lenght;
- (3) the ProcesioTokens object, returned by Authenticate method; 
- (4) the workspace name, which can be null if you are working on the personal workspace.
+ 1. the instanceID;
+ 2. the file details, as file path, variable name, lenght;
+ 3. the ProcesioTokens object, returned by Authenticate method; 
+ 4. the workspace name, which can be null if you are working on the personal workspace.
  
  ### 3. Launch a process
  
  The third step, launches the process should be run only after the files have been uploaded.
  To call the LaunchProcessInstance method, you will need 3 parameters:
- (1) the instanceID;
- (2) the ProcesioTokens object, returned by Authenticate method; 
- (3) the workspace name, which can be null if you are working on the personal workspace.
+ 1. the instanceID;
+ 2. the ProcesioTokens object, returned by Authenticate method; 
+ 3. the workspace name, which can be null if you are working on the personal workspace.
  
  There is the possibility to synchronously launch the process. And, in addition to the above parameters, a timeout is required.
     
@@ -82,11 +93,11 @@ PM> Install-Package ProcesioSDK
 	
  The RunProcess method is the alternative to Publish and Launch a process.
  To call this you will need 5 parameters:
- (1) the process id to execute; 
- (2) the input values  used by the process, a dictionary that contains the name of the variables used for process and their values;
- (3) the ProcesioTokens object, returned by Authenticate method; 
- (4) the workspace name, which can be null if you are working on the personal workspace;
- (5) the input file(s) (the variable name, the file content and the file name with extension), which can be null if no files are required.
+ 1. the process id to execute; 
+ 2. the input values  used by the process, a dictionary that contains the name of the variables used for process and their values;
+ 3. the ProcesioTokens object, returned by Authenticate method; 
+ 4. the workspace name, which can be null if you are working on the personal workspace;
+ 5. the input file(s) (the variable name, the file content and the file name with extension), which can be null if no files are required.
  
  There is the possibility to synchronously run the process. And, in addition to the above parameters, a timeout is required.
 	
